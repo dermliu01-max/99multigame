@@ -180,7 +180,7 @@ table.heat td{height:26px;border-radius:6px;text-align:center;font-weight:800;co
 <!-- ========== 關卡地圖 ========== -->
 <section class="screen" id="s-map">
   <div class="title" style="font-size:24px">選擇關卡</div>
-  <div class="sub" id="mapSub">拿到 ⭐ 才能解鎖下一關</div>
+  <div class="sub" id="mapSub">想練哪一段就點哪一段</div>
   <div class="levels" id="levels"></div>
   <button class="btn ghost" style="margin-top:18px" onclick="show('s-home')">← 回首頁</button>
 </section>
@@ -273,7 +273,7 @@ LEVELS.push({ name: '大魔王', table: 0, boss: true });
 
 const S = {
   settings: { sound: true, timer: true, typing: false },
-  unlocked: 1,          // 已解鎖到第幾關（1-based）
+  unlocked: LEVELS.length,  // 全部關卡一開始就開放，孩子可以自由選
   stars: {},            // levelIndex -> 星數
   stats: {},            // "3x4" -> {r, w, t(ms)}
   wrong: {},            // "3x4" -> 還要連續答對幾次才畢業
@@ -571,7 +571,7 @@ function finish() {
   $('rRight').textContent = c.right;
   $('rWrong').textContent = c.wrong;
   $('rTime').textContent = avg.toFixed(1) + 's';
-  $('rNext').style.display = (!S.reviewMode && pass && c.li + 1 < LEVELS.length && S.unlocked > c.li + 1) ? 'block' : 'none';
+  $('rNext').style.display = (!S.reviewMode && c.li + 1 < LEVELS.length) ? 'block' : 'none';
 
   const msgs = {
     3: '太厲害了！這一段你已經超熟的 🏆',
@@ -675,7 +675,7 @@ function renderStats() {
 
 function resetAll() {
   if (!confirm('確定要清除所有星星與紀錄，重新開始嗎？')) return;
-  S.unlocked = 1; S.stars = {}; S.stats = {}; S.wrong = {}; S.cur = null;
+  S.unlocked = LEVELS.length; S.stars = {}; S.stats = {}; S.wrong = {}; S.cur = null;
   updateReviewBtn();
   show('s-home');
 }
